@@ -48,6 +48,8 @@ module.exports = {
     'react/require-default-props': 'off',
     'jsx-a11y/label-has-associated-control': 'off',
     'consistent-return': 'off',
+    'arrow-body-style': 'off',
+    'react/no-array-index-key': 'off',
   },
   overrides: [
     {

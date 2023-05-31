@@ -1,9 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { App } from '~/app';
+import { createCtx } from '@reatom/framework';
+import { reatomContext } from '@reatom/npm-react';
+import { App } from './app';
+
+const ctx = createCtx();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <App />
+    <reatomContext.Provider value={ctx}>
+      <App />
+    </reatomContext.Provider>
   </React.StrictMode>
 );
