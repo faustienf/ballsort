@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react';
-import { action, atom, onUpdate } from '@reatom/framework';
+import { action, atom, mapState, onConnect, onUpdate } from '@reatom/framework';
 import shuffle from 'lodash/shuffle';
 
 export type BallColor = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
@@ -36,21 +36,6 @@ export const $field = atom((ctx) => {
     const leftBalls = isCurrent ? tube.balls.slice(1) : tube.balls;
     return { balls: leftBalls, over, complete: isComplete(tube) };
   });
-});
-
-const $filledTubesCount = atom((ctx) => {
-  return ctx.get($field).filter(({ complete }) => complete).length;
-});
-
-onUpdate($field, (ctx, field) => {
-  console.log({ field });
-});
-
-onUpdate($filledTubesCount, (ctx, filledTubesCount) => {
-  console.log({ filledTubesCount });
-  if (filledTubesCount === COLORS_IN_GAME) {
-    $state(ctx, 'won');
-  }
 });
 
 const generateTubes = action((ctx, colorsCount: number) => {
@@ -152,4 +137,16 @@ export const toMainMenuClicked = action((ctx) => {
 });
 export const restartClicked = action((ctx) => {
   resetGame(ctx);
+});
+
+const $filledTubesCount = $field.pipe(
+  mapState((ctx, field) => {
+    return field.filter(({ complete }) => complete).length;
+  })
+);
+
+onUpdate($filledTubesCount, (ctx) => {
+  if (ctx.get($filledTubesCount) === COLORS_IN_GAME) {
+    $state(ctx, 'won');
+  }
 });
